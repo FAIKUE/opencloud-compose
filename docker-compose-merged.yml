@@ -57,7 +57,7 @@ services:
       OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS: "${OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS:-1}"
       # default language for services/WebUI; defaults to English, language code (ISO 639-1, e.g. de, en, fr)
       OC_DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE}
-      
+
       # this is needed for setting the correct CSP header
       COLLABORA_DOMAIN: ${COLLABORA_DOMAIN:-collabora.opencloud.test}
       TRAEFIK_PORT_HTTPS: ${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
@@ -75,19 +75,19 @@ services:
       COLLABORATION_APP_ICON: https://${COLLABORA_DOMAIN:-collabora.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}/favicon.ico
       COLLABORATION_APP_INSECURE: "${INSECURE:-true}"
       COLLABORATION_CS3API_DATAGATEWAY_INSECURE: "${INSECURE:-true}"
-      
+
       # bind to all interfaces
       PROXY_HTTP_ADDR: "0.0.0.0:9200"
     ports:
       # expose the opencloud server on localhost
-      - "127.0.0.1:9200:9200"
+      - "9200:9200"
     volumes:
-      - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
-      - ./config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt
+      #- ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
+      #- ./config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt
       # configure the .env file to use own paths instead of docker internal volumes
-      - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
-      - ${OC_DATA_DIR:-opencloud-data}:/var/lib/opencloud
-      - ${OC_APPS_DIR:-./config/opencloud/apps}:/var/lib/opencloud/web/assets/apps
+      - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud:rw
+      - ${OC_DATA_DIR:-opencloud-data}:/var/lib/opencloud:rw
+      - ${OC_APPS_DIR:-./config/opencloud/apps}:/var/lib/opencloud/web/assets/apps:rw
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: on-failure:5
@@ -143,7 +143,7 @@ services:
       password: ${COLLABORA_ADMIN_PASSWORD:-admin}
     ports:
       # expose the collabora server on localhost
-      - "127.0.0.1:9980:9980"
+      - "9980:9980"
     cap_add:
       - SYS_ADMIN
     security_opt:
